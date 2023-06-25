@@ -42,7 +42,7 @@ class DataTransformation:
                 steps=[
                     ('imputer', SimpleImputer(strategy='most_frequent')),
                     ('one_hot_encoder', OneHotEncoder()),
-                    ('scalar', StandardScaler())
+                    ('scalar', StandardScaler(with_mean=False))
                 ]
             )
 
@@ -87,11 +87,6 @@ class DataTransformation:
 
             logging.info(f'Applying preprocessing object on training dataframe and testing dataframe')
 
-            save_object(
-                file_path = self.data_transformation_config.preprocessor_obj_filepath,
-                obj=preprocessing_obj
-            )
-
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df)  # assuming parameters have already been computed, so
                                                                                        # applying only transformation
@@ -104,6 +99,12 @@ class DataTransformation:
                 input_feature_test_arr, np.array(target_feature_test_df)
             ]
 
+
+            save_object(
+                file_path = self.data_transformation_config.preprocessor_obj_filepath,
+                obj=preprocessing_obj
+            )
+
             logging.info(f'Saving pre-processed object')
 
             return (
@@ -111,6 +112,6 @@ class DataTransformation:
                 test_arr,
                 self.data_transformation_config.preprocessor_obj_filepath,
             )
-        except:
-            pass
+        except Exception as e:
+            raise CustomException(e, sys)
 
