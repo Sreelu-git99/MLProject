@@ -35,7 +35,7 @@ class DataTransformation:
             num_pipeline = Pipeline(
                 steps=[
                     ('imputer', SimpleImputer(strategy='median')),
-                    ('scalar', StandardScaler())
+                    ('scalar', StandardScaler())           # converting to standard normal distribution (mean=0, SD=1)
                 ]   
             )
             cat_pipeline = Pipeline(
